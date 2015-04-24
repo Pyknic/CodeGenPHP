@@ -16,14 +16,17 @@
  */
 package com.speedment.codegen.php.views;
 
-import static com.speedment.codegen.Formatting.*;
+import static com.speedment.codegen.Formatting.dnl;
+import static com.speedment.codegen.Formatting.indent;
+import static com.speedment.codegen.Formatting.nl;
 import com.speedment.codegen.base.Generator;
-import com.speedment.codegen.base.DependencyManager;
 import com.speedment.codegen.base.Transform;
 import com.speedment.codegen.java.views.interfaces.HasClassesView;
-import com.speedment.codegen.java.views.interfaces.HasJavadocView;
 import com.speedment.codegen.java.views.interfaces.HasImportsView;
+import com.speedment.codegen.lang.interfaces.HasCode;
 import com.speedment.codegen.lang.models.File;
+import com.speedment.codegen.php.models.FileImpl;
+import static com.speedment.util.CodeCombiner.joinIfNotEmpty;
 import java.util.Optional;
 
 /**
@@ -34,10 +37,22 @@ public class FileView implements Transform<File, String>,
     HasClassesView<File>, HasImportsView<File> {
 	
 	@Override
-	public Optional<String> transform(Generator cg, File model) {
+	public Optional<String> transform(Generator gen, File model) {
 		return Optional.of(
-            renderImports(cg, model) +
-            renderClasses(cg, model)
+			"<?php" + nl() + indent(
+				renderImports(gen, model) +
+				renderCode(model) +
+				renderClasses(gen, model)
+			) + nl() + "?>"
 		);
+	}
+	
+	private String renderCode(File model) {
+		if (model instanceof HasCode) {
+			return ((HasCode<FileImpl>) model).getCode()
+				.stream().collect(joinIfNotEmpty(nl(), "", dnl()));
+		} else {
+			return "";
+		}
 	}
 }

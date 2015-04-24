@@ -21,8 +21,11 @@ import static com.speedment.codegen.Formatting.SPACE;
 import com.speedment.codegen.base.Generator;
 import com.speedment.codegen.base.Transform;
 import com.speedment.codegen.lang.interfaces.HasModifiers;
+import com.speedment.codegen.lang.models.ClassOrInterface;
 import com.speedment.codegen.lang.models.modifiers.Modifier;
 import static com.speedment.codegen.lang.models.modifiers.Modifier.FINAL;
+import static com.speedment.codegen.lang.models.modifiers.Modifier.PRIVATE;
+import static com.speedment.codegen.lang.models.modifiers.Modifier.PROTECTED;
 import static com.speedment.codegen.lang.models.modifiers.Modifier.PUBLIC;
 import static com.speedment.codegen.lang.models.modifiers.Modifier.STATIC;
 import com.speedment.util.CodeCombiner;
@@ -40,6 +43,12 @@ public interface HasModifiersView<M extends HasModifiers<M>> extends Transform<M
 		
 		final Set<Modifier> modifiers = new HashSet<>();
 		modifiers.addAll(model.getModifiers());
+		
+		if (cg.getRenderStack().fromTop(ClassOrInterface.class).equals(model)) {
+			modifiers.remove(PUBLIC);
+			modifiers.remove(PROTECTED);
+			modifiers.remove(PRIVATE);
+		}
 		
 		if (modifiers.contains(FINAL)) {
 			modifiers.remove(PUBLIC);

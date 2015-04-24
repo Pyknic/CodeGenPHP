@@ -19,6 +19,8 @@ package com.speedment.codegen.php;
 import com.speedment.codegen.base.DefaultDependencyManager;
 import com.speedment.codegen.base.DefaultGenerator;
 import com.speedment.codegen.base.TransformFactory;
+import com.speedment.codegen.lang.models.File;
+import com.speedment.codegen.php.models.FileImpl;
 
 /**
  *
@@ -33,9 +35,15 @@ public class PHPGenerator extends DefaultGenerator {
     
     public PHPGenerator() {
 		super (new PHPTransformFactory());
+		setModelImplementations();
 	}
 	
 	public PHPGenerator(TransformFactory... factories) {
 		super(new DefaultDependencyManager(types), factories);
+		setModelImplementations();
+	}
+	
+	private void setModelImplementations() {
+		File.setSupplier(() -> new FileImpl(null));
 	}
 }
