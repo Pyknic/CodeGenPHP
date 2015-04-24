@@ -16,50 +16,39 @@
  */
 package com.speedment.codegen.php.views;
 
-import static com.speedment.codegen.Formatting.dnl;
-import static com.speedment.codegen.Formatting.scnl;
+import static com.speedment.codegen.Formatting.*;
 import com.speedment.codegen.base.Generator;
-import com.speedment.codegen.lang.models.Enum;
-import com.speedment.codegen.php.views.traits.HasModifiersView;
+import com.speedment.codegen.lang.models.Class;
 import static java.util.stream.Collectors.joining;
-
 
 /**
  *
  * @author Emil Forslund
  */
-public class EnumView extends ClassOrInterfaceView<Enum> 
-	implements HasModifiersView<Enum> {
-	
-    @Override
+public class ClassView extends ClassOrInterfaceView<Class> {
+    
+	@Override
 	protected String renderDeclarationType() {
-		return "class";
+		return CLASS_STRING;
 	}
 
 	@Override
 	public String extendsOrImplementsInterfaces() {
-		return "implements";
+		return IMPLEMENTS_STRING;
 	}
 
 	@Override
-	protected String renderSupertype(Generator cg, Enum model) {
-		return "";
-	}
-
-	@Override
-	protected String onBeforeFields(Generator gen, Enum model) {
-		return gen.onEach(model.getConstants())
-			.collect(joining(scnl()));
+	protected String renderSupertype(Generator cg, Class model) {
+		if (model.getSupertype().isPresent()) {
+			return EXTENDS_STRING + cg.on(model.getSupertype().get()).orElse(EMPTY) + SPACE;
+		} else {
+			return EMPTY;
+		}
 	}
 
     @Override
-    protected String renderConstructors(Generator cg, Enum model) {
-        return cg.onEach(model.getConstructors())
+    protected String renderConstructors(Generator cg, Class model) {
+		return cg.onEach(model.getConstructors())
             .collect(joining(dnl()));
     }
-	
-	@Override
-	public String renderModifiers(Generator cg, Enum model) {
-		return HasModifiersView.super.renderModifiers(cg, model);
-	}
 }

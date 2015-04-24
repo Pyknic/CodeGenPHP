@@ -44,7 +44,7 @@ public interface HasModifiersView<M extends HasModifiers<M>> extends Transform<M
 		final Set<Modifier> modifiers = new HashSet<>();
 		modifiers.addAll(model.getModifiers());
 		
-		if (cg.getRenderStack().fromTop(ClassOrInterface.class).equals(model)) {
+		if (cg.getRenderStack().fromBottom(ClassOrInterface.class).anyMatch(coi -> coi.equals(model))) {
 			modifiers.remove(PUBLIC);
 			modifiers.remove(PROTECTED);
 			modifiers.remove(PRIVATE);

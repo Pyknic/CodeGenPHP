@@ -17,10 +17,8 @@
 package com.speedment.codegen.php;
 
 import com.speedment.codegen.base.DefaultTransformFactory;
-import com.speedment.codegen.java.views.ClassView;
 import com.speedment.codegen.java.views.InterfaceFieldView;
 import com.speedment.codegen.java.views.InterfaceMethodView;
-import com.speedment.codegen.java.views.InterfaceView;
 import com.speedment.codegen.java.views.JavadocTagView;
 import com.speedment.codegen.java.views.JavadocView;
 import com.speedment.codegen.java.views.TypeView;
@@ -51,12 +49,14 @@ import com.speedment.codegen.lang.models.values.NumberValue;
 import com.speedment.codegen.lang.models.values.ReferenceValue;
 import com.speedment.codegen.lang.models.values.TextValue;
 import com.speedment.codegen.php.views.ArrayValueView;
+import com.speedment.codegen.php.views.ClassView;
 import com.speedment.codegen.php.views.ConstructorView;
 import com.speedment.codegen.php.views.EnumConstantView;
 import com.speedment.codegen.php.views.EnumView;
 import com.speedment.codegen.php.views.FieldView;
 import com.speedment.codegen.php.views.FileView;
 import com.speedment.codegen.php.views.ImportView;
+import com.speedment.codegen.php.views.InterfaceView;
 import com.speedment.codegen.php.views.MethodView;
 import com.speedment.codegen.php.views.ModifierView;
 
@@ -74,8 +74,6 @@ public class PHPTransformFactory extends DefaultTransformFactory {
 		super (name);
 		
 		// Inherited from Java implementation.
-		install(Class.class, ClassView.class);
-        install(Interface.class, InterfaceView.class);
 		install(Type.class, TypeView.class);
 		install(Javadoc.class, JavadocView.class);
 		install(JavadocTag.class, JavadocTagView.class);
@@ -88,6 +86,8 @@ public class PHPTransformFactory extends DefaultTransformFactory {
 		install(InterfaceField.class, InterfaceFieldView.class);
 		
 		// Custom views for PHP
+		install(Interface.class, InterfaceView.class);
+		install(Class.class, ClassView.class);
 		install(File.class, FileView.class);
 		install(Field.class, FieldView.class);
 		install(Method.class, MethodView.class);
